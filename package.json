@@ -1,0 +1,22 @@
+{
+  "name": "real-time-pizza",
+  "version": "1.0.0",
+  "description": "This is our realtime pizza app",
+  "main": "index.js",
+  "scripts": {
+    
+    "dev" : " nodemon server.js",
+    "serve": "node server.js"
+
+  },
+  "author": "Hridoy",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.2",
+    "express-ejs-layouts": "^2.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
