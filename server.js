@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const flash = require('express-flash');
 const MongoDbStore = require('connect-mongo')(session)
+const passport = require('passport');
+const req = require('express/lib/request');
 
 // Database connection
 const MONGO_CONNECTION_URL="mongodb://localhost/khaba-naki"
@@ -46,16 +48,25 @@ app.use(session({
 
 
 }))
+
+//Passport config
+const passportInit = require('./app/config/passport');
+passportInit(passport)
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use(flash());
 //Assets
 
 app.use(express.static('public'));
+app.use(express.urlencoded({ extended: false}))
 app.use(express.json());
 
 //Global middleware 
 
 app.use((req , res , next) => {
     res.locals.session = req.session
+    res.locals.user = req.user
 
     next()
 })
