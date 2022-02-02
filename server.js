@@ -10,7 +10,7 @@ const session = require('express-session');
 const flash = require('express-flash');
 const MongoDbStore = require('connect-mongo')(session)
 const passport = require('passport');
-const req = require('express/lib/request');
+const Emitter = require('events')
 
 // Database connection
 const MONGO_CONNECTION_URL="mongodb://localhost/khaba-naki"
@@ -36,7 +36,9 @@ let mongoStore = new MongoDbStore({
 
 })
 
-
+// Event emitter
+const eventEmitter = new Emitter()
+app.set('eventEmitter', eventEmitter)
 
 // Session confih
 app.use(session({
@@ -44,7 +46,15 @@ app.use(session({
    resave: false,
    store: mongoStore,
    saveUninitialized: false,
-   cookie: { maxAge: 1000 * 60 * 60 * 24}
+   SameSite : true,
+ 
+   
+ 
+   cookie: { 
+       maxAge: 1000 * 60 * 60 * 24,
+      
+       Secure:true
+    }
 
 
 }))
