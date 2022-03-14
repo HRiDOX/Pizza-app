@@ -1,7 +1,8 @@
 import axios from "axios"
 import moment from "moment"
+import Noty  from "noty"
 
-function initAdmin() {
+function initAdmin(socket) {
 
 
     const orderTableBody = document.querySelector('#orderTableBody')
@@ -91,16 +92,16 @@ function initAdmin() {
                 <td class="border px-4 py-2">
                     
                     <div class="inline-block relative w-64">
-                        <form action="/admin/order/status" method="POST">
+                        <form action="/admin/order/payment_status" method="POST">
                             <input type="hidden" name="orderId" value="${ order._id }">
-                            <select name="status" onchange="this.form.submit()"
+                            <select name="payment_status" onchange="this.form.submit()"
                                 class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-                                <option value="order_placed"
+                                <option value="not_paid"
                                     ${ order.payment_status === 'not_paid' ? 'selected' : '' }>
                                    Not Paid</option>
-                                <option value="confirmed" ${ order.status === 'Paid_by_cash' ? 'selected' : '' }>
+                                <option value="Paid_by_cash" ${ order.payment_status === 'Paid_by_cash' ? 'selected' : '' }>
                                 Paid_by_cash</option>
-                                <option value="prepared" ${ order.status === 'Paid_by_online' ? 'selected' : '' }>
+                                <option value="Paid_by_online" ${ order.payment_status === 'Paid_by_online' ? 'selected' : '' }>
                                 Paid_by_online</option>
                             </select>
                         </form>
@@ -120,7 +121,19 @@ function initAdmin() {
 
 
     }
+    socket.on('orderPlaced', (order) => {
+        new Noty ({
+            type: 'success',
+            timeout: 1000,
+             text: 'New Order!',
+             progressBar:false
+        }).show();
 
+        orders.unshift(order)
+
+        orderTableBody.innerHTML = ''
+        orderTableBody.innerHTML = generateMarkup(orders)
+  })
            
 }
 

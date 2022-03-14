@@ -77,6 +77,8 @@ app.use(express.json());
 app.use((req , res , next) => {
     res.locals.session = req.session
     res.locals.user = req.user
+    
+  
 
     next()
 })
@@ -92,7 +94,37 @@ app.set('view engine','ejs');
 
 require('./routes/web')(app);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
 
     console.log(`listening on port ${PORT}`)
+})
+
+
+// Scoket 
+
+const io =  require('socket.io')(server)
+
+io.on('connection' , (socket) =>{
+
+    // Join 
+    console.log(socket.id)
+
+    socket.on('join',(orderId) => {
+
+        console.log(orderId)
+        socket.join(orderId)
+    })
+})
+
+eventEmitter.on('orderUpdated',(data) => {
+    io.to(`order_${data.id}`).emit('orderUpdated', data)
+})
+
+eventEmitter.on('paymentUpdated',(data) => {
+    io.to(`order_${data.id}`).emit('paymentUpdated', data)
+})
+
+eventEmitter.on('orderPlaced', (data) =>  {
+
+    io.to('adminRoom').emit('orderPlaced', data)
 })
