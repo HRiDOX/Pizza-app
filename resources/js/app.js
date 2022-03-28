@@ -2,6 +2,8 @@ import axios from 'axios';
 import noty from 'noty';
 import  initAdmin  from './admin'
 import moment from 'moment'
+import { connect } from 'mongoose';
+import { initStripe } from './stripe'
 
 let addToCart = document.querySelectorAll('.add-to-cart')
 let cartCounter = document.querySelector('#cartCounter')
@@ -70,15 +72,19 @@ let time  = document.createElement('small')
 function updateStatus(order) {
  
 
-  statuses.forEach((status) => {
-    status.classList.remove('step-completed')
-    status.classList.remove('current')
+statuses.forEach((status) => {
+    
+      status.classList.remove('step-completed')
+      status.classList.remove('current')
+      
+  
+   
 })
 
-statuses.forEach((payment_status) => {
+/*statuses.forEach((payment_status) => {
   payment_status.classList.remove('step-completed')
   payment_status.classList.remove('current')
-})
+})*/
 
 let stepCompleted = true;
 statuses.forEach((status) => {
@@ -92,9 +98,10 @@ statuses.forEach((status) => {
         status.appendChild(time)
        if(status.nextElementSibling) {
         status.nextElementSibling.classList.add('current')
+        
        }
    }
-}),
+})
 
  
  
@@ -120,7 +127,56 @@ statuses.forEach((status) => {
 
 }
 
+/*function updateStatuss(order) {
+ 
+
+  
+
+statuses.forEach((payment_status) => {
+  payment_status.classList.remove('step-completed')
+  payment_status.classList.remove('current')
+})
+
+let stepCompleted = true;
+
+
+ 
+ 
+  statuses.forEach((payment_status) => {
+
+    let dataProps =  payment_status.dataset.status
+ 
+    if (dataProps === order.payment_status)  {
+      payment_status.classList.add('current')
+
+      if (payment_status.nextElementSibling) {
+        payment_status.nextElementSibling.classList.add('step-completed')
+      }
+      if (payment_status.previousElementSibling) {
+        payment_status.previousElementSibling.classList.add('step-completed')
+      }
+      
+     }
+    
+ 
+   })
+
+
+}*/
+
+
+
+
+
+
 updateStatus(order);
+//updateStatuss(order)
+
+
+//ajax call
+
+
+initStripe()
 
 //  Socket
 
